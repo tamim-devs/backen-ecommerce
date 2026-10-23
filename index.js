@@ -241,17 +241,27 @@ app.post("/api/send-email", async (req, res) => {
 
 
 
-     app.get('/admin/products',verifyAdmin, async (req, res) => {
-      try {
-        const products = await productsCollection.find();
-        const result = await products.toArray();
-        res.send(result);
-      } catch (error) {
-        console.error("Error fetching products:", error);
-        res.status(500).json({ error: "Internal server error" });
-      }
-    })  
+ app.get(
+  "/admin/products",
+  verityToken,
+  verifyAdmin,
+  async (req, res) => {
+    try {
+      const products = await productsCollection
+        .find({})
+        .sort({ _id: -1 })
+        .toArray();
 
+      return res.status(200).json(products);
+    } catch (error) {
+      console.error("Error fetching admin products:", error);
+
+      return res.status(500).json({
+        message: "Failed to fetch products",
+      });
+    }
+  }
+);
     
 app.get("/admin/orders",verityToken, verifyAdmin,   async (req, res) => {
   try {
@@ -685,8 +695,6 @@ app.get("/my/orders", verityToken, verifySeller, async (req, res) => {
     );
 
 run().catch(console.dir);
-
-
     app.listen(port, () => {
       console.log(
         `Server is running on ${process.env.NEXT_PUBLIC_BACKEND_URL}`
@@ -699,6 +707,10 @@ run().catch(console.dir);
     );
   }
 }
+
+
+
+
 
 module.exports = app
 
