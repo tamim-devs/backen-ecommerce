@@ -694,12 +694,9 @@ app.get("/my/orders", verityToken, verifySeller, async (req, res) => {
       "Pinged your deployment. Successfully connected to MongoDB!"
     );
 
-run().catch(console.dir);
-    app.listen(port, () => {
-      console.log(
-        `Server is running on ${process.env.NEXT_PUBLIC_BACKEND_URL}`
-      );
-    });
+
+   
+
   } catch (error) {
     console.error(
       "MongoDB connection error:",
@@ -709,7 +706,9 @@ run().catch(console.dir);
 }
 
 
-
+run().catch((error) => {
+  console.error("Backend initialization error:", error);
+});
 
 
 module.exports = app
